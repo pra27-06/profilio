@@ -15,7 +15,7 @@ loginBtn.addEventListener("click", async () => {
 
     try {
 
-        const response = await fetch("https://profilio-backend-kslj.onrender.com", {
+        const response = await fetch("https://profilio-backend-kslj.onrender.com/api/auth/login",  {
 
             method: "POST",
 

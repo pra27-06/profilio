@@ -3,30 +3,37 @@ const registerBtn = document.getElementById("registerBtn");
 registerBtn.addEventListener("click", async () => {
 
     const username = document.getElementById("username").value;
-
     const password = document.getElementById("password").value;
-
     const message = document.getElementById("message");
 
-    const response = await fetch("https://profilio-backend-kslj.onrender.com",{
+    try {
 
-        method:"POST",
+        const response = await fetch(
+            "https://profilio-backend-kslj.onrender.com/api/auth/register",
+            {
+                method: "POST",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-        body:JSON.stringify({
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            }
+        );
 
-            username,
-            password
+        const data = await response.json();
 
-        })
+        message.innerText = data.message;
 
-    });
+    }
+    catch(error){
 
-    const data = await response.json();
+        console.error(error);
+        message.innerText = "Unable to connect to server.";
 
-    message.innerText = data.message;
+    }
 
 });
