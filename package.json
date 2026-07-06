@@ -1,7 +1,9 @@
 {
+  "name": "profilio",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.0",
-    "multer": "^2.2.0",
     "uuid": "^14.0.1"
   }
 }
