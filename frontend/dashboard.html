@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profilio Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div id="overlay"></div>
+
+<div class="sidebar" id="sidebar">
+
+    <div class="sidebarTop">
+
+        <h2>Profilio</h2>
+
+        <i class="fa-solid fa-xmark" id="closeSidebar"></i>
+
+    </div>
+
+    <ul>
+
+        <li>
+            <i class="fa-solid fa-user"></i>
+            Profile
+        </li>
+
+        <li id="settings">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </li>
+
+        <li id="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="container">
+
+    <div class="topBar">
+
+        <i class="fa-solid fa-bars" id="menuBtn"></i>
+
+        <div class="topContent">
+
+            <h2>
+
+                Hello 👋
+                <span id="helloName">User</span>
+
+            </h2>
+
+            <button
+                class="previewBtn"
+                id="preview">
+
+                <i class="fa-solid fa-eye"></i>
+
+                Preview
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="profileSection">
+
+            <img
+                src="images/default.png"
+                id="profilePreview">
+
+            <input
+                type="file"
+                id="profileImage"
+                accept="image/*">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                Full Name
+
+            </label>
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter Full Name">
+
+        </div> 
+        <div class="inputGroup">
+
+            <label>
+
+                Bio
+
+            </label>
+
+            <textarea
+                id="bio"
+                maxlength="200"
+                placeholder="Write something about yourself"></textarea>
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                🌐 Personal Website
+
+            </label>
+
+            <input
+                type="text"
+                id="website1"
+                placeholder="https://yourwebsite.com">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                💼 Portfolio Website
+
+            </label>
+
+            <input
+                type="text"
+                id="website2"
+                placeholder="https://portfolio.com">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                <i class="fa-brands fa-instagram" style="color:#E1306C;"></i>
+
+                Instagram
+
+            </label>
+
+            <input
+                type="text"
+                id="instagram"
+                placeholder="https://instagram.com/username">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                <i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i>
+
+                LinkedIn
+
+            </label>
+
+            <input
+                type="text"
+                id="linkedin"
+                placeholder="https://linkedin.com/in/username">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                <i class="fa-brands fa-github"></i>
+
+                GitHub
+
+            </label>
+
+            <input
+                type="text"
+                id="github"
+                placeholder="https://github.com/username">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                <i class="fa-brands fa-youtube" style="color:red;"></i>
+
+                YouTube
+
+            </label>
+
+            <input
+                type="text"
+                id="youtube"
+                placeholder="https://youtube.com/@channel">
+
+        </div>
+
+        <div class="inputGroup">
+
+            <label>
+
+                <i class="fa-brands fa-reddit" style="color:#FF5700;"></i>
+
+                Reddit
+
+            </label>
+
+            <input
+                type="text"
+                id="reddit"
+                placeholder="https://reddit.com/u/username">
+
+        </div>
+
+        <div class="bottomButtons">
+
+            <button id="save">
+
+                Save
+
+            </button>
+
+            <button id="publish">
+
+                Publish
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+
+</html>
