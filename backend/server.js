@@ -14,7 +14,11 @@ const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
 // Middlewares
-app.use(cors());
+
+app.use(cors({
+    origin: "https://profilio-frontend.onrender.com",
+    credentials: true
+}));
 
 app.use(express.json());
 
