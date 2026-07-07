@@ -8,9 +8,9 @@ registerBtn.addEventListener("click", async () => {
 
     try {
 
-        const response = await fetch(
-            "https://profilio-backend-kslj.onrender.com/api/auth/register",
-            {
+        
+        const response = await fetch("https://profilio-backend-kslj.onrender.com/register",{
+            
                 method: "POST",
 
                 headers: {
