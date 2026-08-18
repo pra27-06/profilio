@@ -14,11 +14,9 @@ const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
 // Middlewares
-
 app.use(cors({
     origin: [
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
+        "https://profilio-83bb.onrender.com",
         "https://profilio-frontend.onrender.com"
     ],
     credentials: true
@@ -47,6 +45,6 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
 
-    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`✅ Server running on port ${PORT}`);
 
 });
