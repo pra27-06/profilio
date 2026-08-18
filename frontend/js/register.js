@@ -8,7 +8,8 @@ registerBtn.addEventListener("click", async () => {
 
     if (!username || !password) {
 
-        message.innerText = "Please fill all fields";
+        message.innerText = "Please fill all fields.";
+
         return;
 
     }
@@ -16,7 +17,7 @@ registerBtn.addEventListener("click", async () => {
     try {
 
         const response = await fetch(
-            "https://profilio-backend-kslj.onrender.com/api/auth/register",
+            "https://profiliobackend.onrender.com/api/auth/register",
             {
                 method: "POST",
 
@@ -25,8 +26,8 @@ registerBtn.addEventListener("click", async () => {
                 },
 
                 body: JSON.stringify({
-                    username: username,
-                    password: password
+                    username,
+                    password
                 })
             }
         );
@@ -35,23 +36,23 @@ registerBtn.addEventListener("click", async () => {
 
         console.log(data);
 
+        message.innerText = data.message;
+
         if (data.success) {
 
-            message.innerText = data.message || "Registration successful";
-
             setTimeout(() => {
+
                 window.location.href = "login.html";
+
             }, 1000);
-
-        } else {
-
-            message.innerText = data.message || "Registration failed";
 
         }
 
-    } catch (error) {
+    }
 
-        console.error("Registration Error:", error);
+    catch (error) {
+
+        console.error("Register Error:", error);
 
         message.innerText = "Unable to connect to server.";
 

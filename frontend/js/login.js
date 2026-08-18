@@ -8,6 +8,7 @@ loginBtn.addEventListener("click", async () => {
     if (!username || !password) {
 
         alert("Please fill all fields.");
+
         return;
 
     }
@@ -15,7 +16,7 @@ loginBtn.addEventListener("click", async () => {
     try {
 
         const response = await fetch(
-            "https://profilio-backend-kslj.onrender.com/api/auth/login",
+            "https://profiliobackend.onrender.com/api/auth/login",
             {
                 method: "POST",
 
@@ -24,8 +25,8 @@ loginBtn.addEventListener("click", async () => {
                 },
 
                 body: JSON.stringify({
-                    username: username,
-                    password: password
+                    username,
+                    password
                 })
             }
         );
@@ -37,17 +38,20 @@ loginBtn.addEventListener("click", async () => {
         if (data.success) {
 
             localStorage.setItem("token", data.token);
-            localStorage.setItem("username", data.username || username);
+
+            localStorage.setItem("username", data.username);
 
             window.location.href = "dashboard.html";
 
         } else {
 
-            alert(data.message || "Login failed.");
+            alert(data.message);
 
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error("Login Error:", error);
 
