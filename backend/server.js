@@ -16,7 +16,11 @@ const profileRoutes = require("./routes/profileRoutes");
 // Middlewares
 
 app.use(cors({
-    origin: "https://profilio-frontend.onrender.com",
+    origin: [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "https://profilio-frontend.onrender.com"
+    ],
     credentials: true
 }));
 

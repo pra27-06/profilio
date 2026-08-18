@@ -3,10 +3,13 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
 // ================= REGISTER =================
-
 const register = async (req, res) => {
 
+    console.log("🔥 REGISTER API HIT");
+
     try {
+
+
 
         const { username, password } = req.body;
 
@@ -84,8 +87,9 @@ const register = async (req, res) => {
 
 const login = (req, res) => {
 
-    try {
+    console.log("🔥 LOGIN API HIT");
 
+    try {
         const { username, password } = req.body;
 
         if (!username || !password) {
