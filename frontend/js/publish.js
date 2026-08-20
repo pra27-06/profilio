@@ -1,37 +1,65 @@
+// =============================
+// Profilio Publish
+// =============================
+
 const theme = localStorage.getItem("theme");
 
-if(theme==="dark"){
-
-document.body.style.background="#111827";
-
+if (theme === "dark") {
+    document.body.style.background = "#111827";
 }
-const API = "http://localhost:5000/api";
+
+// =============================
+// DEPLOYED BACKEND
+// =============================
+
+const API_BASE = "https://profilobackend.onrender.com";
+const API = `${API_BASE}/api`;
 
 const username = localStorage.getItem("username");
 
 if (!username) {
-
     window.location.href = "login.html";
-
 }
 
-const profilePhoto = document.getElementById("profilePhoto");
-const name = document.getElementById("name");
-const bio = document.getElementById("bio");
-const links = document.getElementById("links");
-const shareBtn = document.getElementById("shareBtn");
+// =============================
+// Elements
+// =============================
+
+const profilePhoto =
+    document.getElementById("profilePhoto");
+
+const name =
+    document.getElementById("name");
+
+const bio =
+    document.getElementById("bio");
+
+const links =
+    document.getElementById("links");
+
+const shareBtn =
+    document.getElementById("shareBtn");
+
+// =============================
+// Load Published Profile
+// =============================
 
 async function publish() {
 
     try {
 
-        const res = await fetch(`${API}/profile/${username}`);
+        const res = await fetch(
+            `${API}/profile/${encodeURIComponent(username)}`
+        );
 
         const data = await res.json();
 
         if (!data.success) {
 
-            alert("Profile Missing");
+            alert(
+                data.message ||
+                "Profile Missing"
+            );
 
             return;
 
@@ -39,96 +67,139 @@ async function publish() {
 
         const p = data.profile;
 
-        // Profile
+        // =============================
+        // Profile Image
+        // =============================
 
         if (p.profileImage) {
 
             profilePhoto.src =
-                "http://localhost:5000" + p.profileImage;
-
-        } else {
-
-            profilePhoto.src = "images/default.png";
+                `${API_BASE}${p.profileImage}`;
 
         }
 
-        name.innerText = p.name || username;
+        else {
 
-        bio.innerText = p.bio || "";
+            profilePhoto.src =
+                "images/default.png";
 
+        }
+
+        // =============================
+        // Name
+        // =============================
+
+        name.innerText =
+            p.name || username;
+
+        // =============================
+        // Bio
+        // =============================
+
+        bio.innerText =
+            p.bio || "";
+
+        // =============================
         // Links
+        // =============================
 
         links.innerHTML = "";
 
         addLink("🌐 Website", p.website1);
-
         addLink("💼 Portfolio", p.website2);
-
         addLink("📷 Instagram", p.instagram);
-
         addLink("💼 LinkedIn", p.linkedin);
-
         addLink("💻 GitHub", p.github);
-
         addLink("▶ YouTube", p.youtube);
-
         addLink("👽 Reddit", p.reddit);
 
+        // =============================
         // Share
+        // =============================
 
-        const url = window.location.href;
+        if (shareBtn) {
 
-        shareBtn.onclick = async () => {
+            shareBtn.onclick = async () => {
 
-            try {
+                try {
 
-                if (navigator.share) {
+                    const url =
+                        window.location.href;
 
-                    await navigator.share({
+                    if (navigator.share) {
 
-                        title: p.name,
+                        await navigator.share({
 
-                        text: p.bio,
+                            title:
+                                p.name ||
+                                "Profilio Profile",
 
-                        url: url
+                            text:
+                                p.bio ||
+                                "Check out my Profilio profile!",
 
-                    });
+                            url: url
+
+                        });
+
+                    }
+
+                    else {
+
+                        await navigator.clipboard.writeText(
+                            url
+                        );
+
+                        alert(
+                            "✅ Profile Link Copied"
+                        );
+
+                    }
 
                 }
 
-                else {
+                catch (error) {
 
-                    await navigator.clipboard.writeText(url);
-
-                    alert("✅ Profile Link Copied");
+                    console.log(
+                        "Share Error:",
+                        error
+                    );
 
                 }
 
-            }
+            };
 
-            catch (e) {
-
-                console.log(e);
-
-            }
-
-        };
+        }
 
     }
 
-    catch (err) {
+    catch (error) {
 
-        console.log(err);
+        console.log(
+            "Publish Error:",
+            error
+        );
+
+        alert(
+            "❌ Unable to connect to server."
+        );
 
     }
 
 }
 
+// =============================
+// Add Link
+// =============================
+
 function addLink(title, url) {
 
-    if (!url || url.trim() === "") return;
+    if (!url || url.trim() === "") {
+        return;
+    }
 
-    const a = document.createElement("a");
+    const a =
+        document.createElement("a");
 
     a.className = "link";
 
@@ -141,31 +212,52 @@ function addLink(title, url) {
     switch (title) {
 
         case "🌐 Website":
-            icon = '<i class="fa-solid fa-globe"></i>';
+
+            icon =
+                '<i class="fa-solid fa-globe"></i>';
+
             break;
 
         case "💼 Portfolio":
-            icon = '<i class="fa-solid fa-briefcase"></i>';
+
+            icon =
+                '<i class="fa-solid fa-briefcase"></i>';
+
             break;
 
         case "📷 Instagram":
-            icon = '<i class="fa-brands fa-instagram" style="color:#E1306C;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-instagram" style="color:#E1306C;"></i>';
+
             break;
 
         case "💼 LinkedIn":
-            icon = '<i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i>';
+
             break;
 
         case "💻 GitHub":
-            icon = '<i class="fa-brands fa-github"></i>';
+
+            icon =
+                '<i class="fa-brands fa-github"></i>';
+
             break;
 
         case "▶ YouTube":
-            icon = '<i class="fa-brands fa-youtube" style="color:red;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-youtube" style="color:red;"></i>';
+
             break;
 
         case "👽 Reddit":
-            icon = '<i class="fa-brands fa-reddit" style="color:#FF5700;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-reddit" style="color:#FF5700;"></i>';
+
             break;
 
     }
@@ -175,36 +267,68 @@ function addLink(title, url) {
         <span>${title}</span>
     `;
 
-    // Long Press = Copy Link
+    // =============================
+    // Long Press Copy
+    // =============================
 
     let timer;
 
-    a.addEventListener("mousedown", () => {
+    a.addEventListener(
+        "mousedown",
+        () => {
 
-        timer = setTimeout(() => {
+            timer = setTimeout(
+                async () => {
 
-            navigator.clipboard.writeText(url);
+                    try {
 
-            alert("✅ Link Copied");
+                        await navigator.clipboard.writeText(
+                            url
+                        );
 
-        }, 1000);
+                        alert(
+                            "✅ Link Copied"
+                        );
 
-    });
+                    }
 
-    a.addEventListener("mouseup", () => {
+                    catch (error) {
 
-        clearTimeout(timer);
+                        console.log(error);
 
-    });
+                    }
 
-    a.addEventListener("mouseleave", () => {
+                },
+                1000
+            );
 
-        clearTimeout(timer);
+        }
+    );
 
-    });
+    a.addEventListener(
+        "mouseup",
+        () => {
+
+            clearTimeout(timer);
+
+        }
+    );
+
+    a.addEventListener(
+        "mouseleave",
+        () => {
+
+            clearTimeout(timer);
+
+        }
+    );
 
     links.appendChild(a);
 
 }
+
+// =============================
+// Start
+// =============================
 
 publish();

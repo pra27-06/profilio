@@ -1,11 +1,19 @@
+// =============================
+// Profilio Preview
+// =============================
+
 const theme = localStorage.getItem("theme");
 
-if(theme==="dark"){
-
-document.body.style.background="#111827";
-
+if (theme === "dark") {
+    document.body.style.background = "#111827";
 }
-const API = "http://localhost:5000/api";
+
+// =============================
+// DEPLOYED BACKEND
+// =============================
+
+const API_BASE = "https://profilobackend.onrender.com";
+const API = `${API_BASE}/api`;
 
 const username = localStorage.getItem("username");
 
@@ -13,22 +21,34 @@ if (!username) {
     window.location.href = "login.html";
 }
 
+// =============================
+// Elements
+// =============================
+
 const profilePhoto = document.getElementById("profilePhoto");
 const name = document.getElementById("name");
 const bio = document.getElementById("bio");
 const links = document.getElementById("links");
 
+// =============================
+// Load Profile
+// =============================
+
 async function loadProfile() {
 
     try {
 
-        const response = await fetch(`${API}/profile/${username}`);
+        const response = await fetch(
+            `${API}/profile/${encodeURIComponent(username)}`
+        );
 
         const data = await response.json();
 
         if (!data.success) {
 
-            alert("Profile Not Found");
+            alert(
+                data.message || "Profile Not Found"
+            );
 
             return;
 
@@ -36,19 +56,41 @@ async function loadProfile() {
 
         const p = data.profile;
 
-        name.innerText = p.name || username;
+        // =============================
+        // Name
+        // =============================
 
-        bio.innerText = p.bio || "";
+        name.innerText =
+            p.name || username;
+
+        // =============================
+        // Bio
+        // =============================
+
+        bio.innerText =
+            p.bio || "";
+
+        // =============================
+        // Profile Image
+        // =============================
 
         if (p.profileImage) {
 
-            profilePhoto.src = "http://localhost:5000" + p.profileImage;
-
-        } else {
-
-            profilePhoto.src = "images/default.png";
+            profilePhoto.src =
+                `${API_BASE}${p.profileImage}`;
 
         }
+
+        else {
+
+            profilePhoto.src =
+                "images/default.png";
+
+        }
+
+        // =============================
+        // Links
+        // =============================
 
         links.innerHTML = "";
 
@@ -62,17 +104,30 @@ async function loadProfile() {
 
     }
 
-    catch (err) {
+    catch (error) {
 
-        console.log(err);
+        console.log(
+            "Preview Error:",
+            error
+        );
+
+        alert(
+            "❌ Unable to connect to server."
+        );
 
     }
 
 }
 
+// =============================
+// Add Link
+// =============================
+
 function addLink(title, url) {
 
-    if (!url || url.trim() === "") return;
+    if (!url || url.trim() === "") {
+        return;
+    }
 
     const a = document.createElement("a");
 
@@ -87,31 +142,52 @@ function addLink(title, url) {
     switch (title) {
 
         case "🌐 Website":
-            icon = '<i class="fa-solid fa-globe"></i>';
+
+            icon =
+                '<i class="fa-solid fa-globe"></i>';
+
             break;
 
         case "💼 Portfolio":
-            icon = '<i class="fa-solid fa-briefcase"></i>';
+
+            icon =
+                '<i class="fa-solid fa-briefcase"></i>';
+
             break;
 
         case "📷 Instagram":
-            icon = '<i class="fa-brands fa-instagram" style="color:#E1306C;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-instagram" style="color:#E1306C;"></i>';
+
             break;
 
         case "💼 LinkedIn":
-            icon = '<i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i>';
+
             break;
 
         case "💻 GitHub":
-            icon = '<i class="fa-brands fa-github"></i>';
+
+            icon =
+                '<i class="fa-brands fa-github"></i>';
+
             break;
 
         case "▶ YouTube":
-            icon = '<i class="fa-brands fa-youtube" style="color:red;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-youtube" style="color:red;"></i>';
+
             break;
 
         case "👽 Reddit":
-            icon = '<i class="fa-brands fa-reddit" style="color:#FF5700;"></i>';
+
+            icon =
+                '<i class="fa-brands fa-reddit" style="color:#FF5700;"></i>';
+
             break;
 
     }
@@ -121,54 +197,68 @@ function addLink(title, url) {
         <span>${title}</span>
     `;
 
+    // =============================
+    // Long Press Copy
+    // =============================
+
     let timer;
 
-    // Long Press Copy
+    a.addEventListener(
+        "mousedown",
+        () => {
 
-    a.addEventListener("mousedown", () => {
+            timer = setTimeout(
+                async () => {
 
-        timer = setTimeout(() => {
+                    try {
 
-            navigator.clipboard.writeText(url);
+                        await navigator.clipboard.writeText(
+                            url
+                        );
 
-            alert("✅ Link Copied");
+                        alert(
+                            "✅ Link Copied"
+                        );
 
-        }, 1000);
+                    }
 
-    });
+                    catch (error) {
 
-    a.addEventListener("mouseup", () => {
+                        console.log(error);
 
-        clearTimeout(timer);
+                    }
 
-    });
+                },
+                1000
+            );
 
-    a.addEventListener("mouseleave", () => {
+        }
+    );
 
-        clearTimeout(timer);
+    a.addEventListener(
+        "mouseup",
+        () => {
 
-    });
+            clearTimeout(timer);
 
-    a.addEventListener("touchstart", () => {
+        }
+    );
 
-        timer = setTimeout(() => {
+    a.addEventListener(
+        "mouseleave",
+        () => {
 
-            navigator.clipboard.writeText(url);
+            clearTimeout(timer);
 
-            alert("✅ Link Copied");
-
-        }, 1000);
-
-    });
-
-    a.addEventListener("touchend", () => {
-
-        clearTimeout(timer);
-
-    });
+        }
+    );
 
     links.appendChild(a);
 
 }
+
+// =============================
+// Start
+// =============================
 
 loadProfile();

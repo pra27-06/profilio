@@ -1,19 +1,23 @@
 // =============================
 // Profilio Dashboard
 // =============================
+
 const theme = localStorage.getItem("theme");
 
-if(theme==="dark"){
-
-document.body.style.background="#111827";
-
+if (theme === "dark") {
+    document.body.style.background = "#111827";
 }
 
-const API = "http://localhost:5000/api";
+// =============================
+// DEPLOYED BACKEND
+// =============================
 
-// -----------------------------
+const API_BASE = "https://profilobackend.onrender.com";
+const API = `${API_BASE}/api`;
+
+// =============================
 // Elements
-// -----------------------------
+// =============================
 
 const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.getElementById("sidebar");
@@ -45,93 +49,104 @@ const settingsBtn = document.getElementById("settings");
 
 const username = localStorage.getItem("username");
 
-// -----------------------------
+// =============================
 // Login Check
-// -----------------------------
+// =============================
 
 if (!username) {
     window.location.href = "login.html";
 }
 
-// -----------------------------
+// =============================
 // Sidebar
-// -----------------------------
+// =============================
 
-menuBtn.onclick = () => {
-    sidebar.classList.add("active");
-    overlay.classList.add("active");
-};
+if (menuBtn) {
+    menuBtn.onclick = () => {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+    };
+}
 
-closeSidebar.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-};
+if (closeSidebar) {
+    closeSidebar.onclick = () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    };
+}
 
-overlay.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-};
+if (overlay) {
+    overlay.onclick = () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    };
+}
 
-// -----------------------------
+// =============================
 // Image Preview
-// -----------------------------
+// =============================
 
-profileImage.onchange = () => {
+if (profileImage) {
 
-    if (!profileImage.files.length) return;
+    profileImage.onchange = () => {
 
-    profilePreview.src = URL.createObjectURL(profileImage.files[0]);
+        if (!profileImage.files.length) return;
 
-};
+        profilePreview.src = URL.createObjectURL(
+            profileImage.files[0]
+        );
 
-// -----------------------------
+    };
+
+}
+
+// =============================
 // Load Profile
-// -----------------------------
+// =============================
 
 async function loadProfile() {
 
     try {
 
-        const res = await fetch(`${API}/profile/${username}`);
+        const res = await fetch(
+            `${API}/profile/${encodeURIComponent(username)}`
+        );
 
         const data = await res.json();
 
-        if (!data.success) return;
+        if (!data.success) {
+            console.log(data.message);
+            return;
+        }
 
         const p = data.profile;
 
         helloName.innerText = p.name || username;
 
         fullName.value = p.name || "";
-
         bio.value = p.bio || "";
 
         website1.value = p.website1 || "";
-
         website2.value = p.website2 || "";
 
         instagram.value = p.instagram || "";
-
         linkedin.value = p.linkedin || "";
-
         github.value = p.github || "";
-
         youtube.value = p.youtube || "";
-
         reddit.value = p.reddit || "";
 
         if (p.profileImage) {
 
             profilePreview.src =
-                "http://localhost:5000" + p.profileImage;
+                `${API_BASE}${p.profileImage}`;
 
         }
 
     }
 
-    catch (e) {
+    catch (error) {
 
-        console.log(e);
+        console.log("Load Profile Error:", error);
 
     }
 
@@ -139,104 +154,152 @@ async function loadProfile() {
 
 loadProfile();
 
-// -----------------------------
-// Save
-// -----------------------------
+// =============================
+// SAVE PROFILE
+// =============================
 
-saveBtn.onclick = async () => {
+if (saveBtn) {
 
-    const form = new FormData();
+    saveBtn.onclick = async () => {
 
-    form.append("username", username);
+        const form = new FormData();
 
-    form.append("name", fullName.value);
+        form.append("username", username);
+        form.append("name", fullName.value);
+        form.append("bio", bio.value);
 
-    form.append("bio", bio.value);
+        form.append("website1", website1.value);
+        form.append("website2", website2.value);
 
-    form.append("website1", website1.value);
+        form.append("instagram", instagram.value);
+        form.append("linkedin", linkedin.value);
+        form.append("github", github.value);
+        form.append("youtube", youtube.value);
+        form.append("reddit", reddit.value);
 
-    form.append("website2", website2.value);
+        if (
+            profileImage &&
+            profileImage.files &&
+            profileImage.files.length > 0
+        ) {
 
-    form.append("instagram", instagram.value);
+            form.append(
+                "profileImage",
+                profileImage.files[0]
+            );
 
-    form.append("linkedin", linkedin.value);
+        }
 
-    form.append("github", github.value);
+        try {
 
-    form.append("youtube", youtube.value);
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Saving...";
 
-    form.append("reddit", reddit.value);
+            const res = await fetch(
+                `${API}/profile/save`,
+                {
+                    method: "POST",
+                    body: form
+                }
+            );
 
-    if (profileImage.files.length > 0) {
+            const data = await res.json();
 
-        form.append("profileImage", profileImage.files[0]);
+            if (data.success) {
 
-    }
+                alert("✅ Profile saved successfully!");
 
-    try {
+                await loadProfile();
 
-        const res = await fetch(`${API}/profile/save`, {
+            }
 
-            method: "POST",
+            else {
 
-            body: form
+                alert(
+                    "❌ " +
+                    (data.message || "Unable to save profile")
+                );
 
-        });
+            }
 
-        const data = await res.json();
+        }
 
-        alert(data.message);
+        catch (error) {
 
-        loadProfile();
+            console.log("Save Error:", error);
 
-    }
+            alert(
+                "❌ Unable to connect to server.\n\n" +
+                "Please try again."
+            );
 
-    catch {
+        }
 
-        alert("Server Error");
+        finally {
 
-    }
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Save";
 
-};
+        }
 
-// -----------------------------
-// Preview
-// -----------------------------
+    };
 
-previewBtn.onclick = () => {
+}
 
-    window.location.href = "preview.html";
+// =============================
+// PREVIEW
+// =============================
 
-};
+if (previewBtn) {
 
-// -----------------------------
-// Publish
-// -----------------------------
+    previewBtn.onclick = () => {
 
-publishBtn.onclick = () => {
+        window.location.href = "preview.html";
 
-    window.location.href = "publish.html";
+    };
 
-};
+}
 
-// -----------------------------
-// Settings
-// -----------------------------
+// =============================
+// PUBLISH
+// =============================
 
-settingsBtn.onclick = () => {
+if (publishBtn) {
 
-    window.location.href = "settings.html";
+    publishBtn.onclick = () => {
 
-};
+        window.location.href = "publish.html";
 
-// -----------------------------
-// Logout
-// -----------------------------
+    };
 
-logoutBtn.onclick = () => {
+}
 
-    localStorage.clear();
+// =============================
+// SETTINGS
+// =============================
 
-    window.location.href = "login.html";
+if (settingsBtn) {
 
-};
+    settingsBtn.onclick = () => {
+
+        window.location.href = "settings.html";
+
+    };
+
+}
+
+// =============================
+// LOGOUT
+// =============================
+
+if (logoutBtn) {
+
+    logoutBtn.onclick = () => {
+
+        localStorage.clear();
+
+        window.location.href = "login.html";
+
+    };
+
+}
